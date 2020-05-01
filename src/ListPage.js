@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import data from './data.js';
 import request from 'superagent';
 import CharacterItem from './CharacterItem.js';
+
 
 export default class ListPage extends Component {
     state = {

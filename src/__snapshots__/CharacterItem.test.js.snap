@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders welcome message 1`] = `
+<li
+  className="characterItem"
+>
+  <h2
+    className="characterName"
+  >
+    some character
+  </h2>
+  <img
+    alt="some character"
+    className="characterImage"
+    src="some image"
+  />
+  <p
+    className="species"
+  >
+    some species
+  </p>
+  <p
+    className="status"
+  >
+    some status
+  </p>
+</li>
+`;
