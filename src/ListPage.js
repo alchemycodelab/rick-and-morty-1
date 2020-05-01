@@ -1,22 +1,42 @@
-import React, { Component } from 'react'
-import data from './data.js'
+import React, { Component } from 'react';
+import data from './data.js';
+import request from 'superagent';
+import CharacterItem from './CharacterItem.js';
 
 export default class ListPage extends Component {
     state = {
-      data: data.results 
+      characters: [],
+      searchQuery: '',
+    }
+
+    handleChange = (e) => {
+      const value = e.target.value
+      this.setState({searchQuery: value})
+    }
+
+    handleClick = async () => {
+      const { 
+        body: { 
+            results
+          } 
+      } = await request.get(`https://rickandmortyapi.com/api/character/?name=${this.state.searchQuery}`)
+
+      this.setState({ characters: results})
     }
 
     render() {
+      
         return (
             <div>
+              <input className='listPageInput' onChange={this.handleChange} placeholder='Search for a Character'/>
+              <button onClick={this.handleClick}>Search</button>
+              <ul>
                 {
-                  this.state.data.map((character) => {
-                    return <div>
-                        {character.name} happens to be {character.status}
-                        <img src={character.image} />
-                        </div>
+                  this.state.characters.map((door) => {
+                    return <CharacterItem obj={door}/>
                   })  
                 }
+              </ul>
             </div>
         )
     }
