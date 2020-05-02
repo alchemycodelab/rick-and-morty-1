@@ -7,6 +7,8 @@ export default class ListPage extends Component {
     state = {
       characters: [],
       searchQuery: '',
+      page: 1,
+      info: {}
     }
 
     handleChange = (e) => {
@@ -15,17 +17,37 @@ export default class ListPage extends Component {
     }
 
     handleClick = async () => {
-      const { 
-        body: { 
-            results
-          } 
-      } = await request.get(`https://rickandmortyapi.com/api/character/?name=${this.state.searchQuery}`)
+      const response = await request.get(`https://rickandmortyapi.com/api/character/?name=${this.state.searchQuery}`)
+      const results = response.body.results;
+      const info = response.body.info;
+      this.setState({ characters: results, info: info })
+    }
 
-      this.setState({ characters: results})
+    routeToNextPage = async () => {
+      const nextPageNumber = this.state.page + 1;  
+      this.setState({ page: nextPageNumber }) 
+    
+     const response = await request.get(this.state.info.next);
+     const results = response.body.results;
+     const info = response.body.info;
+     this.setState({ characters: results, info: info })
+
+    }
+
+    routeToPreviousPage = async () => {
+      const previousPageNumber = this.state.page - 1;  
+      this.setState({ page: previousPageNumber }) 
+    
+     const response = await request.get(this.state.info.prev);
+     const results = response.body.results;
+     const info = response.body.info;
+     this.setState({ characters: results, info: info })
+
     }
 
     render() {
-      
+      console.log('hey', this.state.characters)
+
         return (
             <div>
               <input className='listPageInput' onChange={this.handleChange} placeholder='Search for a Character'/>
@@ -37,6 +59,11 @@ export default class ListPage extends Component {
                   })  
                 }
               </ul>
+              {this.state.info.prev && <button onClick={this.routeToPreviousPage}>Previous</button>}
+              
+              {this.state.info.next && <button onClick={this.routeToNextPage}>Next</button>}
+             
+
             </div>
         )
     }
