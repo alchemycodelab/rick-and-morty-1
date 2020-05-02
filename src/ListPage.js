@@ -11,6 +11,25 @@ export default class ListPage extends Component {
       info: {}
     }
 
+
+    async componentDidMount(){
+      const searchParams = new URLSearchParams(window.location.search);
+      const query = searchParams.get('search');
+
+      this.setState( {searchQuery: query});
+      
+      if (query){
+        let page = 1;
+        if (searchParams.get('page')){
+          page = searchParams.get('page');
+        }
+      const response = await request.get(`https://rickandmortyapi.com/api/character/?name=${query}&page=${page}`)
+      const results = response.body.results;
+      const info = response.body.info;
+      this.setState({ characters: results, info: info })  
+    }
+    }
+
     handleChange = (e) => {
       const value = e.target.value
       this.setState({searchQuery: value})
@@ -46,11 +65,11 @@ export default class ListPage extends Component {
     }
 
     render() {
-      console.log('hey', this.state.characters)
+      console.log('hey', this.props)
 
         return (
             <div>
-              <input className='listPageInput' onChange={this.handleChange} placeholder='Search for a Character'/>
+              <input value= {this.state.searchQuery}className='listPageInput' onChange={this.handleChange} placeholder='Search for a Character'/>
               <button onClick={this.handleClick}>Search</button>
               <ul>
                 {
